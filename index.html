@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    head{
+        display: flex;
+        height: 10px;
+        width: 100%;
+    }
+    footer{
+        margin: auto;
+        text-align: center;
+        color: #f1f1f1;
+    }
+    input{
+        background-color:#28B9DE ;
+        border-radius: 20px;
+        color: white;
+        margin-bottom: 3px;
+    }
+    button{
+        background-color: #04AA6D;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        width: 100%;
+        margin-top: 5px;
+        border-style: initial;
+        font-size: 20px;
+    }
+    .right_elements{
+        width: 35px;
+        height: 5px;
+        background-color: black;
+        float: right;
+    }
+    .principal{
+        display: flex;
+        margin: auto;
+        
+    }
+ /*-------------------------------------------------------------*/
+    /* Dropdown Button */
+    .dropbtn {
+        background-color: #3498DB;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+    
+    /* Dropdown button on hover & focus */
+    .dropbtn:hover, .dropbtn:focus {
+        background-color: #2980B9;
+    }
+    
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+    
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+    
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {background-color: #ddd;}
+    
+    /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+    .show {display:block;}
+
+
+/*-------------------------------------------------------------*/    
+    .container{
+        width: 100%;
+        height: 100%;
+        padding: 20px 20px;
+    }
+    .box{
+        flex: 30%;
+        display: table;
+        margin: auto;
+        margin-bottom: 10px;
+        align-items: center;
+        text-align: center;
+        font-size: 20px;
+        color:black;
+        background-color: #399CF5 ;
+        padding: 35px 35px;
+        border-radius: 20px
+    }
+
+    .box ul{
+        margin-top: 30px;
+        font-size: 30px;
+        text-align: center;
+    }
+    .box ul li{
+        list-style: none;
+        margin-top: 50px;
+        font-weight: 100;
+    }
+
+    .box ul li i{
+        cursor: pointer;
+        margin: 10px;
+        font-size: 40px;
+    }
+
+    .box ul li i:hover{
+        opacity: 0.6;
+    }
+/*-------------------------------------------------------------*/
+    .already{
+        margin: auto;
+        background-color: #c0c3c7;
+        width: 50%;
+        text-align: center;
+        border-radius: 40px
+    }
+    /*-------------------------------------------------------------*/
+    
+</style> 
+<html>
+    <head>
+        <script src="js_modules/jquery.min.js"></script>
+        <script type="module" src="../js_modules/js.cookie.mjs"></script>
+        <img src="logo.png">
+        <div class="right_elements">
+            <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+                <div id="myDropdown" class="dropdown-content">
+                  <a href="#">language?</a>
+                  <a href="#">more about us</a>
+                </div>
+              </div>
+        </div>
+    </head>
+    <body background="84738f85d5f04b91e003c35a0b5c40e2.jpeg">
+        <div class="principal">
+            <div class="container">
+                <div class="box">
+                    <h3>Sign up faster with</h3>
+                    <!--google or fb-->
+                    <ul>
+                        <li><i style="font-size:24px" class="fa">&#xf230;</i>
+                            <i style="font-size:24px" class="fa">&#xf0d5;</i>
+                            <i style="font-size:24px" class="fa">&#xf0e1;</i></li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <h3>Sign up with Email</h3>
+                    <p>first name</p>
+                    <input type="text" id="first_name">
+                    <p>Last name</p>
+                    <input type="text" id="Last_name">
+                    <p>Email</p>
+                    <input type="email" id="email">
+                    <p>Password</p>
+                    <input type="password" id="password">
+                    <br>
+                    <button type="submit" >Join</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="already">
+            <h3>Already a member?</h3>
+            <a href="#">Sign in</a>
+        </div>
+
+        <footer>
+            <p>About</p>
+            <p>safety</p>
+            <p>connect with us</p>
+            <p>© 1999 - 2022 Couchsurfing International, Inc.</p>
+        </footer>
+    </body>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-auth.js";
+
+        import Cookies from '/js_modules/js.cookie.mjs';
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyCugv-LXPsLsKEj7sSkMDt0rorBsxVaGAM",
+          authDomain: "couch-serfing.firebaseapp.com",
+          projectId: "couch-serfing",
+          storageBucket: "couch-serfing.appspot.com",
+          messagingSenderId: "989171995134",
+          appId: "1:989171995134:web:be22f3a8e30173d48830af",
+          measurementId: "G-NZHS255XE0"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        //const analytics = getAnalytics(app);
+        const auth = getAuth();
+
+        $('#button1').click(function() {
+    
+            var email = $('#email');    
+            var pass = $('#password');      
+    
+            if(email.val() && pass.val()){
+
+                createUserWithEmailAndPassword(auth, email.val(), pass.val()).then(function(user){
+                    console.log('everything went fine');
+                    console.log(user.user.uid);
+                    //save the user data here.
+                    Cookies.set('Userid', user.user.uid);
+
+                    console.log(Cookies.get("Userid"));
+
+                    window.location.href = "signup2.html";
+                }).catch(function(error) {
+                    console.log('there was an error');
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(errorCode + ' - ' + errorMessage);
+                });
+
+            } else {
+                console.log('fill in both fields');
+            }  
+        });
+    </script>
+    <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+        
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+                }
+            }
+            }
+        }
+    </script>
+</html>

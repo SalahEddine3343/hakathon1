@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        span{
+            display: flex;
+        }
+    </style>
+    <head>
+        <script src="js_modules/jquery.min.js"></script>
+        <script type="module" src="../js_modules/js.cookie.mjs"></script>
+        <img src="logo.png">
+            <div class="right_elements">
+                <p>language?</p>
+                <p>more about us</p>
+            </div>
+    </head>
+    <body>
+        <div class="form">
+            <h5>we will need more few informations about you</h5>
+            <p>gender</p>
+            <select name="gender" id="gender">
+                <option value="m">male</option>
+                <option value="f">female</option>
+            </select>
+            <p>where are you from</p>
+            <select name="inalgeria" id="inalgeria">
+                <option value="inside">im an algerian</option>
+                <option value="outside">outside algeria</option>
+            </select>
+
+            <p>what city im in</p>
+            <select name="city" id="city">
+                <option value="0">wilaya</option>
+            </select>
+            <p>what daira im in</p>
+            <select name="daira" id="daira">
+                <option value="0">daira</option>
+            </select>
+            <p>Languages I'm Fluent In</p>
+            <span><input type="checkbox" id="ar_lang"><p>العربية</p><input type="checkbox" id="en_lang"><p>english</p><input type="checkbox" id="fr_lang"><p>francais</p></span>
+
+            <br>
+            <button type="submit" id="button1"> Join</button>
+        </div>
+    </body>
+    <script type="module">
+        import { wilayas } from './database/wilayas.js'
+        import Cookies from '/js_modules/js.cookie.mjs';
+        console.log(Cookies.get("Userid"));
+        
+        var list = wilayas['wilayas'];
+        var sel = document.getElementById('city');
+        var sel1 = document.getElementById('daira');
+
+        for(var i = 0; i < list.length; i++) {
+            var opt = document.createElement('option');
+            opt.innerHTML = list[i]['name'];
+            opt.value = list[i]['id'];
+            sel.appendChild(opt);
+        }
+
+        var city = document.getElementById("city");
+        document.getElementById('city').onchange = function() {
+            if(city.value != 0){
+                empty_options("daira")
+                //console.log(list[(city.value-1)].daira.length)
+            for(var i = 0; i < list[(city.value-1)].daira.length; i++) {
+                var opt = document.createElement('option');
+                opt.innerHTML = list[(city.value-1)].daira[i]["daira"];
+                opt.value = list[(city.value-1)].daira[i]['daira'];
+                sel1.appendChild(opt);
+                //wilayas[0].daira[0]
+                //wilayas[0].daira[1].daira
+            }
+        }
+        }
+
+        document.getElementById('inalgeria').onchange = function() {
+            var A = document.getElementById("inalgeria").value;
+            if(A == "inside"){
+                document.getElementById("city").removeAttribute("disabled");
+                document.getElementById("daira").removeAttribute("disabled");
+            }
+            else if(A == "outside"){
+                document.getElementById("city").setAttribute("disabled", "disabled");
+                document.getElementById("daira").setAttribute("disabled", "disabled");
+            }
+        }
+
+        function empty_options(value){
+            var select = document.getElementById(value);
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+            select.options[i] = null;
+            }
+        }
+        
+    </script>
+</html>
