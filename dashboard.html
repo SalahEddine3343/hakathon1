@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    head{
+        display: flex;
+        height: 10px;
+        width: 100%;
+    }
+    body{
+
+        background-color: #06d6a0;
+        display: inline;
+    }
+    #logo{
+        width: 40px;
+    }
+    .right_elements{
+        width: 40%;
+        display: inline;
+        float: right;
+        flex-wrap: wrap;
+    }
+    .right_elements a{
+        margin-right: 3%;
+        padding: 3%;
+    }
+    .my_infos{
+        padding: 3%;
+        width: 30%;
+        border: solid black 1px;
+    }
+    .accepting{
+        padding: 3%;
+        width: 90%;
+        margin: auto;
+
+    }
+    .search{
+        padding: 3%;
+        width: 48%;
+        border: solid black 1px;
+        
+    }
+    #problem{
+        display: none;
+        text-align: center;
+        padding: 4% 0 4% 0;
+    }
+    /*-------------------------------------------------------------*/ 
+    .box{
+        flex: 30%;
+        display: table;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        align-items: center;
+        text-align: center;
+        font-size: 20px;
+        color:black;
+        background-color: whitesmoke ;
+        padding: 35px 35px;
+        border-radius: 30px
+    }
+    .horizontal{
+        display: flex;
+        margin: auto;
+    }
+</style>
+<html>
+    <head>
+        <script src="js_modules/jquery.min.js"></script>
+        <script type="module" src="js_modules/js.cookie.mjs"></script>
+        <img src="media/logo.png" id="logo">
+            <div class="right_elements">
+                <a>language</a>
+                <a>dashboard</a>
+                <a href="profile.html">profile</a>
+                <a id="logout" href="#">Logout</a>
+            </div>
+    </head>
+    <div id="problem">
+        <h3>there was a problem</h3>
+        <a href="login.html">go to login page</a>
+    </div>
+
+    <body id="bod">
+        <div id="container">
+            <div class="horizontal">
+                <div class="box">
+                    <div class="my_infos">
+                        <h4 id="name"></h4>
+                        <p id="wilaya"></p>
+                    </div>
+                </div>
+                <!--right up side (most searched places or whatever)-->
+                <div class="box">
+                    <div class="search">
+                        <input type="search" id="mysearch" name="search" placeholder="explore ...">
+                    </div>
+                </div>
+            </div>
+            <div class="box" >
+                <div class="accepting">
+                    <select id="accepting">
+                        <option value="1">Accepting guests</option>
+                        <option value="2" selected>Maybe accepting guests</option>
+                        <option value="3">Not acceptig guests</option>
+                        <option value="4">wants to meet</option>
+                    </select>
+                </div>
+            </div>
+            
+        </div>
+    </body>
+    <script type="module">
+        // export the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDocs, collection, updateDoc, query, where, } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore.js"; 
+
+        import Cookies from '../js_modules/js.cookie.mjs';
+        import { wilayas } from './database/wilayas.js';
+        import { dairas } from './database/wilayas.js'
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+        apiKey: "AIzaSyCugv-LXPsLsKEj7sSkMDt0rorBsxVaGAM",
+        authDomain: "couch-serfing.firebaseapp.com",
+        projectId: "couch-serfing",
+        storageBucket: "couch-serfing.appspot.com",
+        messagingSenderId: "989171995134",
+        appId: "1:989171995134:web:be22f3a8e30173d48830af",
+        measurementId: "G-NZHS255XE0"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth();
+        let db = getFirestore(app);
+
+        var list = dairas;
+
+        if(Cookies.get("Userid") != undefined){
+            var user = Cookies.get("Userid");
+            console.log("user:\t" + user);
+            
+
+            const q = query(collection(db, "users"), where("user_id", "==", user ));
+
+            const querySnapshot = await getDocs(q)
+            querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            //console.log(doc.data());
+            $('#loading').hide();
+            $('#name').text(doc.data().first_name + " " + doc.data().last_name);
+            if(doc.data().daira != "-1" || doc.data().city != "-1"){
+                $('#wilaya').text(doc.data().daira + " " + doc.data().city);
+            }
+            else{
+                $('#wilaya').text(doc.data().country);
+            }
+            });
+
+            const doc1 = doc(db, "users", Cookies.get("Userid"));
+            var statu = document.getElementById("accepting");
+            statu.onchange = async function(event) {
+                //console.log(statu.value)
+                
+                await updateDoc(doc1, {
+                        accepting: statu.value,
+                    }).then(writeResult => {
+
+                        // wait for update to complete
+                        //window.location.href = "signup2.html";
+
+                    });
+            }
+            //logout
+            $('#logout').click(function() {
+                Cookies.remove("Userid")
+                window.location.href = "login.html";
+            })
+        }
+        else {
+            console.log("no coockies found!")
+            $('#problem').show();
+            $('#container').hide();
+            
+            
+        }
+
+        function autocomplete(inp, arr) {
+
+            var currentFocus;
+            /*execute a function when someone writes in the text field:*/
+            inp.addEventListener("input", function(e) {
+                var a, b, i, val = this.value;
+                closeAllLists();
+                if (!val) { return false;}
+                currentFocus = -1;
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                /*append the DIV element as a child of the autocomplete container:*/
+                this.parentNode.appendChild(a);
+                /*for each item in the array...*/
+                for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    /*insert a input field that will hold the current array item's value:*/
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                        /*insert the value for the autocomplete text field:*/
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        //pass the value daira to the next page
+                        localStorage.setItem("daira", this.getElementsByTagName("input")[0].value);
+                        window.location.href="search.html";
+                        /*close the list of autocompleted values, (or any other open lists of autocompleted values:*/
+                        //closeAllLists();
+                    });
+                    a.appendChild(b);
+                    }
+                }
+            });
+            inp.addEventListener("keydown", function(e) {
+                var x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    /*If the arrow DOWN key is pressed,
+                    increase the currentFocus variable:*/
+                    currentFocus++;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 38) { //up
+                    /*If the arrow UP key is pressed,
+                    decrease the currentFocus variable:*/
+                    currentFocus--;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                    }
+                }
+            });
+            
+            function addActive(x) {
+                /*a function to classify an item as "active":*/
+                if (!x) return false;
+                /*start by removing the "active" class on all items:*/
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                /*add class "autocomplete-active":*/
+                x[currentFocus].classList.add("autocomplete-active");
+            }
+            function removeActive(x) {
+                /*a function to remove the "active" class from all autocomplete items:*/
+                for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+                }
+            }
+            function closeAllLists(elmnt) {
+                /*close all autocomplete lists in the document,
+                except the one passed as an argument:*/
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+                }
+            }
+            /*execute a function when someone clicks in the document:*/
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
+        }
+/*initiate the autocomplete function on the "mysearch" element, and pass along the countries array as possible autocomplete values:*/
+autocomplete(document.getElementById("mysearch"), list);
+    </script>
+</html>
