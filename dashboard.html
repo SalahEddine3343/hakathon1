@@ -4,24 +4,28 @@
         padding: 0;
         margin: 0;
     }
-    head{
-        display: flex;
-        height: 10px;
-        width: 100%;
-    }
     body{
 
-        background-color: #06d6a0;
+        /*background-color: #06d6a0;*/
         display: inline;
     }
+    img{
+        width: 50%;
+    }
     #logo{
-        width: 40px;
+        width: 60px;
+        margin: 5px 0 5px 30px;
+    }
+    .header{
+        background-color: #F5F5F5;
+        margin-bottom: 2%;
     }
     .right_elements{
         width: 40%;
         display: inline;
         float: right;
         flex-wrap: wrap;
+        padding: 1.5%;
     }
     .right_elements a{
         margin-right: 3%;
@@ -29,20 +33,25 @@
     }
     .my_infos{
         padding: 3%;
-        width: 30%;
+        width: 94%;
         border: solid black 1px;
     }
     .accepting{
         padding: 3%;
-        width: 90%;
+        width: 100%;
         margin: auto;
-
+    }
+    #accepting{
+        width: 100%;
+        font-size: 20px;
     }
     .search{
         padding: 3%;
-        width: 48%;
+        width: 95%;
         border: solid black 1px;
-        
+    }
+    .search input{
+        width: 90%;
     }
     #problem{
         display: none;
@@ -60,37 +69,71 @@
         text-align: center;
         font-size: 20px;
         color:black;
-        background-color: whitesmoke ;
+        background-color: rgb(220, 223, 255) ;
         padding: 35px 35px;
-        border-radius: 30px
+        border-radius: 30px;
+        width: 41%;
     }
     .horizontal{
         display: flex;
         margin: auto;
+        width: 100%;
+    }
+    #loading-image{
+        width: 60px;
+    }
+    #loading{
+        margin: auto;
+        width: 60px;
+    }
+    .pics{
+        display: flex;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        align-items: center;
+        text-align: center;
+        font-size: 20px;
+        color:black;
+        background-color: rgb(220, 223, 255) ;
+        padding: 35px 35px;
+        border-radius: 30px;
+        width: 41%;
+    }
+    .pics img{
+        width: 30%;
+        aspect-ratio: 1/1;
     }
 </style>
 <html>
     <head>
         <script src="js_modules/jquery.min.js"></script>
         <script type="module" src="js_modules/js.cookie.mjs"></script>
-        <img src="media/logo.png" id="logo">
-            <div class="right_elements">
-                <a>language</a>
-                <a>dashboard</a>
-                <a href="profile.html">profile</a>
-                <a id="logout" href="#">Logout</a>
-            </div>
     </head>
-    <div id="problem">
-        <h3>there was a problem</h3>
-        <a href="login.html">go to login page</a>
-    </div>
 
     <body id="bod">
+        <div class="header">
+            <img src="media/logo.png" id="logo">
+                <div class="right_elements">
+                    <a>language</a>
+                    <a href="dashboard.html">dashboard</a>
+                    <a id="profile">profile</a>
+                    <a id="logout" href="#">Logout</a>
+            </div>
+        </div>
+
+        <div id="problem">
+            <h3>there was a problem</h3>
+            <a href="login.html">go to login page</a>
+        </div>
+
         <div id="container">
             <div class="horizontal">
                 <div class="box">
                     <div class="my_infos">
+                        <div id="loading">
+                            <img id="loading-image" src="media/ajax-loader.gif" alt="Loading..." />
+                        </div>
                         <h4 id="name"></h4>
                         <p id="wilaya"></p>
                     </div>
@@ -98,7 +141,7 @@
                 <!--right up side (most searched places or whatever)-->
                 <div class="box">
                     <div class="search">
-                        <input type="search" id="mysearch" name="search" placeholder="explore ...">
+                        <input type="search" id="mysearch" name="search" placeholder="explore ..." autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -112,7 +155,12 @@
                     </select>
                 </div>
             </div>
-            
+            <div class="pics">
+                <img src="media/wilaya/images.jpeg">
+                <img src="media/wilaya/ORAN_,_VILLE_D'ALGERIE.jpg">
+                <img src="media/wilaya/caves-of-jijel.jpg">
+                
+            </div>
         </div>
     </body>
     <script type="module">
@@ -145,6 +193,13 @@
         let db = getFirestore(app);
 
         var list = dairas;
+
+        
+        $('#profile').click(function() {
+            localStorage.setItem("search_id", "");
+            console.log("working")
+            window.location.href="profile.html";
+        })
 
         if(Cookies.get("Userid") != undefined){
             var user = Cookies.get("Userid");
